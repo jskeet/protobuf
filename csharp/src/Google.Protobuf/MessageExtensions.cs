@@ -50,8 +50,13 @@ namespace Google.Protobuf
         /// </summary>
         /// <param name="message">The message to merge the data into.</param>
         /// <param name="data">The data to merge, which must be protobuf-encoded binary data.</param>
-        public static void MergeFrom(this IMessage message, byte[] data) =>
-            MergeFrom(message, data, false, null);
+        public static void MergeFrom(this IMessage message, byte[] data)
+        {
+            ProtoPreconditions.CheckNotNull(message, nameof(message));
+            ProtoPreconditions.CheckNotNull(data, nameof(data));
+            MergeFrom(message, new ReadOnlySpan<byte>(data), false, null);
+
+        }
 
         /// <summary>
         /// Merges data from the given byte array slice into an existing message.
@@ -60,16 +65,24 @@ namespace Google.Protobuf
         /// <param name="data">The data containing the slice to merge, which must be protobuf-encoded binary data.</param>
         /// <param name="offset">The offset of the slice to merge.</param>
         /// <param name="length">The length of the slice to merge.</param>
-        public static void MergeFrom(this IMessage message, byte[] data, int offset, int length) =>
-            MergeFrom(message, data, offset, length, false, null);
+        public static void MergeFrom(this IMessage message, byte[] data, int offset, int length)
+        {
+            ProtoPreconditions.CheckNotNull(message, nameof(message));
+            ProtoPreconditions.CheckNotNull(data, nameof(data));
+            MergeFrom(message, new ReadOnlySpan<byte>(data, offset, length), false, null);
+        }
 
         /// <summary>
         /// Merges data from the given byte string into an existing message.
         /// </summary>
         /// <param name="message">The message to merge the data into.</param>
         /// <param name="data">The data to merge, which must be protobuf-encoded binary data.</param>
-        public static void MergeFrom(this IMessage message, ByteString data) =>
-            MergeFrom(message, data, false, null);
+        public static void MergeFrom(this IMessage message, ByteString data)
+        {
+            ProtoPreconditions.CheckNotNull(message, nameof(message));
+            ProtoPreconditions.CheckNotNull(data, nameof(data));
+            MergeFrom(message, data.Span, false, null);
+        }
 
         /// <summary>
         /// Merges data from the given stream into an existing message.
@@ -258,27 +271,6 @@ namespace Google.Protobuf
         }
 
         // Implementations allowing unknown fields to be discarded.
-        internal static void MergeFrom(this IMessage message, byte[] data, bool discardUnknownFields, ExtensionRegistry registry)
-        {
-            ProtoPreconditions.CheckNotNull(message, nameof(message));
-            ProtoPreconditions.CheckNotNull(data, nameof(data));
-            MergeFrom(message, new ReadOnlySpan<byte>(data), discardUnknownFields, registry);
-        }
-
-        internal static void MergeFrom(this IMessage message, byte[] data, int offset, int length, bool discardUnknownFields, ExtensionRegistry registry)
-        {
-            ProtoPreconditions.CheckNotNull(message, nameof(message));
-            ProtoPreconditions.CheckNotNull(data, nameof(data));
-            MergeFrom(message, new ReadOnlySpan<byte>(data, offset, length), discardUnknownFields, registry);
-        }
-
-        internal static void MergeFrom(this IMessage message, ByteString data, bool discardUnknownFields, ExtensionRegistry registry)
-        {
-            ProtoPreconditions.CheckNotNull(message, nameof(message));
-            ProtoPreconditions.CheckNotNull(data, nameof(data));
-            MergeFrom(message, data.Span, discardUnknownFields, registry);
-        }
-
         internal static void MergeFrom(this IMessage message, Stream input, bool discardUnknownFields, ExtensionRegistry registry)
         {
             ProtoPreconditions.CheckNotNull(message, nameof(message));
