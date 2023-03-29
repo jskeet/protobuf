@@ -98,6 +98,9 @@ std::string GetClassName(const Descriptor* descriptor) {
 }
 
 std::string GetClassName(const EnumDescriptor* descriptor) {
+  // We don't need to append anything to enum names, even if they class with
+  // common members such as ToString, GetHashCode etc. We don't *declare* those
+  // members within the enum.
   return ToCSharpName(descriptor->full_name(), descriptor->file());
 }
 

@@ -29,6 +29,8 @@ if [ -z "$PROTOC" ]; then
   fi
 fi
 
+echo "Using protoc: $PROTOC"
+
 # descriptor.proto and well-known types
 $PROTOC -Isrc --csharp_out=csharp/src/Google.Protobuf \
     --csharp_opt=base_namespace=Google.Protobuf \

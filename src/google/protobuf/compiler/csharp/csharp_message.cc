@@ -35,6 +35,7 @@
 
 #include "google/protobuf/compiler/code_generator.h"
 #include "absl/container/flat_hash_map.h"
+#include "absl/container/flat_hash_set.h"
 #include "absl/log/absl_log.h"
 #include "absl/strings/str_cat.h"
 #include "google/protobuf/compiler/csharp/csharp_doc_comment.h"
@@ -91,7 +92,30 @@ MessageGenerator::~MessageGenerator() {
 }
 
 std::string MessageGenerator::class_name() {
-  return descriptor_->name();
+  // Names of members declared or overridden in the message.
+  static const auto& reserved_member_names = *new absl::flat_hash_set<absl::string_view>({
+    "Types",
+    "Descriptor",
+    "Equals",
+    "ToString",
+    "GetHashCode",
+    "WriteTo",
+    "Clone",
+    "CalculateSize",
+    "MergeFrom",
+    "OnConstruction",
+    "Parser"
+    });
+
+  std::string class_name = descriptor_->name();
+  if (reserved_member_names.find(class_name) != reserved_member_names.end()) {
+    // Append *two* underscores to class names, so that if we have a field with the same
+    // name (e.g. a descriptor field within a Descriptor message) we don't end up with
+    // problems.
+    absl::StrAppend(&class_name, "__");
+  }
+
+  return class_name;
 }
 
 std::string MessageGenerator::full_class_name() {

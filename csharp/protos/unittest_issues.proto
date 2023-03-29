@@ -224,3 +224,59 @@ message Issue11987Message {
   int32 b = 2 [json_name = 'a'];
   int32 c = 3 [json_name = 'd'];
 }
+
+// Note: all nested messages/enums to
+// avoid polluting the top level too much...
+message Issue12291 {
+  message Messages {
+    message Types {}
+    message Descriptor {
+      string descriptor = 1;
+    }
+    message Equals {}
+    message ToString {}
+    message GetHashCode {}
+    message WriteTo {}
+    message Clone {}
+    message CalculateSize {}
+    message MergeFrom {}
+    message OnConstruction {}
+    message Parser {}
+  }
+  
+  message Enums {
+    enum Types {
+      TYPES_ZERO = 0;
+    }
+    enum Descriptor {
+      DESCRIPTOR = 0;
+    }
+    enum Equals {
+      EQUALS_ZERO = 0;
+    }
+    enum ToString {
+      TO_STRING = 0;
+    }
+    enum GetHashCode {
+      GET_HASH_CODE_ZERO = 0;
+    }
+    enum WriteTo {
+      WRITE_TO_ZERO = 0;
+    }
+    enum Clone {
+      CLONE_ZERO = 0;
+    }
+    enum CalculateSize {
+      CALCULATE_SIZE_ZERO = 0;
+    }
+    enum MergeFrom {
+      MERGE_FROM_ZERO = 0;
+    }
+    enum OnConstruction {
+      ON_CONSTRUCTION_ZERO = 0;
+    }
+    enum Parser {
+      PARSER_ZERO = 0;
+    }
+  }
+}
